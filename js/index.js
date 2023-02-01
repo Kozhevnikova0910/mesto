@@ -15,7 +15,7 @@ function popupClose () {
     popup.classList.remove('popup_opened');
 }
 function saveProfileChanges (e) {
-    // e.preventDefault();
+    e.preventDefault();
     profileName.textContent = popupName.value;
     profileDescription.textContent = popupDescription.value;
     popupClose();
