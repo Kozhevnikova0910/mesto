@@ -1,0 +1,18 @@
+.popup__close-icon {
+    width: 32px;
+    height: 32px;
+    transform: rotate(45deg);
+    fill: rgba(255,255,255,1);
+    transition: fill 0.1s;
+}
+
+.popup__close-btn:hover .popup__close-icon {
+    fill: rgba(255,255,255,0.6);
+}
+
+@media (max-width: 600px) {
+    .popup__close-icon {
+        width: 24px;
+        height: 24px;
+    }
+}
