@@ -1,4 +1,5 @@
 @import "../vendor/normalize.css";
+@import "../vendor/fonts/inter.css";
 @import "../blocks/body/body.css";
 @import "../blocks/page/page.css";
 @import "../blocks/header/header.css";
@@ -24,10 +25,9 @@
 @import "../blocks/footer/__text/footer__text.css";
 @import "../blocks/popup/popup.css";
 @import "../blocks/popup/_opened/popup_opened.css";
+@import "../blocks/popup/__form/popup__form.css";
 @import "../blocks/popup/__close-btn/popup__close-btn.css";
 @import "../blocks/popup/__close-icon/popup__close-icon.css";
-@import "../blocks/popup/__description/popup__description.css";
-@import "../blocks/popup/__name/popup__name.css";
 @import "../blocks/popup/__submit-btn/popup__submit-btn.css";
 @import "../blocks/popup/__title/popup__title.css";
 @import "../blocks/popup/__container/popup__container.css";
