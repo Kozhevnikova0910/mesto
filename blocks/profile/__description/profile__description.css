@@ -4,6 +4,16 @@
     line-height: 22px;
     color: #fff;
     margin: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 450px;
+}
+
+@media (max-width: 850px) {
+    .profile__description {
+        max-width: 350px;
+    }
 }
 
 @media (max-width: 750px) {

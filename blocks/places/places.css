@@ -1,19 +1,6 @@
 .places {
     display: grid;
-    grid-template-columns: repeat(3, calc(33.333% - 5px));
+    grid-template-columns: repeat(auto-fill, minmax(282px, 1fr));
     row-gap: 20px;
     column-gap: 16px;
 }
-
-@media (max-width: 1280px) {
-    .places {
-        grid-template-columns: repeat(2, calc(50% - 8px));
-    }
-}
-
-@media (max-width: 600px) {
-    .places {
-        grid-template-columns: 1fr;
-    }
-}
-

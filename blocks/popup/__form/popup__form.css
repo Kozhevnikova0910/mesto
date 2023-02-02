@@ -1,9 +1,0 @@
-.popup__form {
-    min-height: 330px;
-    background-color: #fff;
-    box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
-    border-radius: 10px;
-    position: relative;
-    padding: 34px 36px 17px;
-    box-sizing: border-box;
-}

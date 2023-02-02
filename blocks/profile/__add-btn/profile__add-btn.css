@@ -8,6 +8,13 @@
     border: 2px solid #FFFFFF;
     border-radius: 2px;
     cursor: pointer;
+    background-image: url(../../../images/icons/plus.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.profile__add-btn:hover {
+    opacity: 0.6;
 }
 
 @media (max-width: 750px) {

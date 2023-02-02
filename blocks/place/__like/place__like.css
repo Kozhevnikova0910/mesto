@@ -2,12 +2,16 @@
     background-color: transparent;
     border: 0;
     cursor: pointer;
-    padding: 0;
+    padding: 2px;
     margin: 2px 0 0 0;
-    width: 22px;
-    height: 19px;
+    width: 24px;
+    height: 21px;
+    background-image: url(../../../images/icons/like.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: opacity 0.15s;
 }
 
 .place__like:hover {
-    fill-opacity: 0.5;
+    opacity: 0.5;
 }
