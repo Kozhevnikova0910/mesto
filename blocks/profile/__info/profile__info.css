@@ -10,6 +10,6 @@
 
 @media (max-width: 600px) {
     .profile__info {
-        max-width: 300px;
+        max-width: 220px;
     }
 }
