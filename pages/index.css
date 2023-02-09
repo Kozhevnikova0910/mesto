@@ -16,6 +16,7 @@
 @import "../blocks/profile/__name-edit/profile__name-edit.css";
 @import "../blocks/places/places.css";
 @import "../blocks/place/place.css";
+@import "../blocks/place/__delete/place__delete.css";
 @import "../blocks/place/__image/place__image.css";
 @import "../blocks/place/__info/place__info.css";
 @import "../blocks/place/__like/place__like.css";
@@ -25,9 +26,13 @@
 @import "../blocks/footer/__text/footer__text.css";
 @import "../blocks/popup/popup.css";
 @import "../blocks/popup/_opened/popup_opened.css";
+@import "../blocks/popup/_type/popup_type_picture.css";
 @import "../blocks/popup/__form/popup__form.css";
 @import "../blocks/popup/__close-btn/popup__close-btn.css";
 @import "../blocks/popup/__submit-btn/popup__submit-btn.css";
 @import "../blocks/popup/__title/popup__title.css";
 @import "../blocks/popup/__container/popup__container.css";
 @import "../blocks/popup/__input/popup__input.css";
+@import "../blocks/picture/picture.css";
+@import "../blocks/picture/__image/picture__image.css";
+@import "../blocks/picture/__title/picture__title.css";
