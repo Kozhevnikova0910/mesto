@@ -1,7 +1,6 @@
 // Переменные попапа Edit Profile
 const popupEditProfile = document.querySelector('.popup_type_edit');
 const openEditProfileButton = document.querySelector('.profile__edit-btn');
-const closeEditProfileButton = popupEditProfile.querySelector('.popup__close-btn');
 const profileName = document.querySelector('.profile__name');
 const profileDescription = document.querySelector('.profile__description');
 const inputEditProfileName = popupEditProfile.querySelector('.popup__input_type_name');
@@ -11,13 +10,11 @@ const inputEditProfileDescription = popupEditProfile.querySelector('.popup__inpu
 const popupAddPlace = document.querySelector('.popup_type_add');
 const formAddPlace = popupAddPlace.querySelector('.popup__form')
 const openAddPlaceButton = document.querySelector('.profile__add-btn');
-const closeAddPlaceButton = popupAddPlace.querySelector('.popup__close-btn');
 const inputAddPlaceName = popupAddPlace.querySelector('.popup__input_type_name');
 const inputAddPlaceLink = popupAddPlace.querySelector('.popup__input_type_link');
 
 // Переменные попапа Picture
 const popupPicture = document.querySelector('.popup_type_picture');
-const closePictureButton = popupPicture.querySelector('.popup__close-btn');
 const imagePopupPicture = popupPicture.querySelector('.picture__image');
 const titlePicture = popupPicture.querySelector('.picture__title');
 
@@ -29,11 +26,24 @@ const placesContainer = document.querySelector('.places');
 // Функции открытия попапа
 function openPopup (element) {
     element.classList.add('popup_opened');
+    addClosePopupListeners(element);
+}
+
+function addClosePopupListeners(element) {
+    element.addEventListener('mousedown', (e) => {
+        if (e.target === element || e.target === element.querySelector('.popup__close-btn')) {
+            closePopup(element);
+        }
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closePopup(element)
+        }
+    })
 }
 
 function openPopupEditProfile () {
-    inputEditProfileName.value = profileName.textContent;
-    inputEditProfileDescription.value = profileDescription.textContent;
+    setPopupEditProfileValues();
     openPopup(popupEditProfile);
 }
 
@@ -41,27 +51,15 @@ function openPopupAddPlace () {
     openPopup(popupAddPlace);
 }
 
-function openPopupPicture (name, image) {
-    imagePopupPicture.src = image.src;
-    titlePicture.textContent = name.textContent;
+function openPopupPicture (pictureData) {
+    imagePopupPicture.src = pictureData.image.src;
+    titlePicture.textContent = pictureData.name.textContent;
     openPopup(popupPicture);
 }
 
 // Функции закрытия попапа
 function closePopup (element) {
     element.classList.remove('popup_opened');
-}
-
-function closePopupEditProfile () {
-    closePopup(popupEditProfile);
-}
-
-function closePopupAddPlace () {
-    closePopup(popupAddPlace);
-}
-
-function closePopupPicture () {
-    closePopup(popupPicture);
 }
 
 // Другие функции
@@ -90,7 +88,8 @@ function addPlace(placeData) {
     placeImageElement.src = placeData.link;
     addLikeHandler(placeLikeElement);
     addRemovePlaceHandler(placeDeleteElement);
-    placeImageElement.addEventListener('click',() => openPopupPicture(placeNameElement, placeImageElement));
+    placeImageElement.addEventListener('click',() =>
+        openPopupPicture({name: placeNameElement, image: placeImageElement}));
     return placeElement;
 }
 
@@ -102,23 +101,36 @@ function renderCard(place) {
 function popupAddPlaceSubmit(e) {
     e.preventDefault();
     renderCard({name: inputAddPlaceName.value, link: inputAddPlaceLink.value});
-    closePopupAddPlace();
+    closePopup(popupAddPlace);
     formAddPlace.reset();
 }
 
 
+// Написала эту функцию, т.к. понадобилось задавать значения инпутов popup_type_edit еще при
+// загрузке страницы, поскольку кнопка popup__submit-btn получала неправильное состояние валидации
+function setPopupEditProfileValues () {
+    inputEditProfileName.value = profileName.textContent;
+    inputEditProfileDescription.value = profileDescription.textContent;
+}
+
+setPopupEditProfileValues();
+enableValidation({
+    formSelector: '.popup__form',
+    inputSelector: '.popup__input',
+    submitButtonSelector: '.popup__submit-btn',
+    inactiveButtonClass: 'popup__submit-btn_inactive',
+    inputErrorClass: 'popup__input_type_error',
+    errorClass: 'popup__input-error_active'
+});
+
 // События попапа Edit Profile
 openEditProfileButton.addEventListener('click', openPopupEditProfile);
-closeEditProfileButton.addEventListener('click', closePopupEditProfile);
 popupEditProfile.addEventListener('submit', saveProfileChanges);
 
 // События попапа Add Place
 openAddPlaceButton.addEventListener('click', openPopupAddPlace);
-closeAddPlaceButton.addEventListener('click', closePopupAddPlace);
 popupAddPlace.addEventListener('submit', popupAddPlaceSubmit);
 
-// События попапа Picture
-closePictureButton.addEventListener('click', closePopupPicture);
 
 // Добавляем карточки из массива
 initialCards.forEach(function (place) {
