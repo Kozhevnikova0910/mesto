@@ -10,6 +10,7 @@ const inputEditProfileDescription = popupEditProfile.querySelector('.popup__inpu
 const popupAddPlace = document.querySelector('.popup_type_add');
 const formAddPlace = popupAddPlace.querySelector('.popup__form')
 const openAddPlaceButton = document.querySelector('.profile__add-btn');
+const addPlaceButton = popupAddPlace.querySelector('.popup__submit-btn');
 const inputAddPlaceName = popupAddPlace.querySelector('.popup__input_type_name');
 const inputAddPlaceLink = popupAddPlace.querySelector('.popup__input_type_link');
 
@@ -21,25 +22,20 @@ const titlePicture = popupPicture.querySelector('.picture__title');
 // Остальные переменные...
 const placeTemplate = document.querySelector('#place').content;
 const placesContainer = document.querySelector('.places');
-
+const popups = document.querySelectorAll('.popup');
+const data = {
+    formSelector: '.popup__form',
+    inputSelector: '.popup__input',
+    submitButtonSelector: '.popup__submit-btn',
+    inactiveButtonClass: 'popup__submit-btn_inactive',
+    inputErrorClass: 'popup__input_type_error',
+    errorClass: 'popup__input-error_active'
+}
 
 // Функции открытия попапа
 function openPopup (element) {
     element.classList.add('popup_opened');
-    addClosePopupListeners(element);
-}
-
-function addClosePopupListeners(element) {
-    element.addEventListener('mousedown', (e) => {
-        if (e.target === element || e.target === element.querySelector('.popup__close-btn')) {
-            closePopup(element);
-        }
-    });
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            closePopup(element)
-        }
-    })
+    document.addEventListener('keydown', closePopupByEscape);
 }
 
 function openPopupEditProfile () {
@@ -49,6 +45,7 @@ function openPopupEditProfile () {
 
 function openPopupAddPlace () {
     openPopup(popupAddPlace);
+    toggleButtonState([inputAddPlaceName, inputAddPlaceName], addPlaceButton, data)
 }
 
 function openPopupPicture (pictureData) {
@@ -60,6 +57,14 @@ function openPopupPicture (pictureData) {
 // Функции закрытия попапа
 function closePopup (element) {
     element.classList.remove('popup_opened');
+    document.removeEventListener('keydown', closePopupByEscape);
+}
+
+function closePopupByEscape(e) {
+    if (e.key === 'Escape') {
+        const openedPopup = document.querySelector('.popup_opened');
+        closePopup(openedPopup);
+    }
 }
 
 // Другие функции
@@ -86,6 +91,7 @@ function addPlace(placeData) {
     const placeDeleteElement = placeElement.querySelector('.place__delete');
     placeNameElement.textContent = placeData.name;
     placeImageElement.src = placeData.link;
+    placeImageElement.alt = placeData.name;
     addLikeHandler(placeLikeElement);
     addRemovePlaceHandler(placeDeleteElement);
     placeImageElement.addEventListener('click',() =>
@@ -114,14 +120,8 @@ function setPopupEditProfileValues () {
 }
 
 setPopupEditProfileValues();
-enableValidation({
-    formSelector: '.popup__form',
-    inputSelector: '.popup__input',
-    submitButtonSelector: '.popup__submit-btn',
-    inactiveButtonClass: 'popup__submit-btn_inactive',
-    inputErrorClass: 'popup__input_type_error',
-    errorClass: 'popup__input-error_active'
-});
+
+enableValidation(data);
 
 // События попапа Edit Profile
 openEditProfileButton.addEventListener('click', openPopupEditProfile);
@@ -136,3 +136,15 @@ popupAddPlace.addEventListener('submit', popupAddPlaceSubmit);
 initialCards.forEach(function (place) {
     renderCard(place);
 });
+
+// Добавляем события закрытия попапов
+popups.forEach((popup) => {
+    popup.addEventListener('mousedown', (evt) => {
+        if (evt.target.classList.contains('popup_opened')) {
+            closePopup(popup)
+        }
+        if (evt.target.classList.contains('popup__close-btn')) {
+            closePopup(popup)
+        }
+    })
+})
