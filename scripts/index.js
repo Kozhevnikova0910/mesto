@@ -8,7 +8,7 @@ const inputEditProfileDescription = popupEditProfile.querySelector('.popup__inpu
 
 // Переменные попапа Add Place
 const popupAddPlace = document.querySelector('.popup_type_add');
-const formAddPlace = popupAddPlace.querySelector('.popup__form')
+const formAddPlace = popupAddPlace.querySelector('.popup__form');
 const openAddPlaceButton = document.querySelector('.profile__add-btn');
 const addPlaceButton = popupAddPlace.querySelector('.popup__submit-btn');
 const inputAddPlaceName = popupAddPlace.querySelector('.popup__input_type_name');
