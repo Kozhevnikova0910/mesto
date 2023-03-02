@@ -1,3 +1,7 @@
+import {initialCards} from './cards.js'
+import {Card} from './Card.js';
+import {FormValidator} from './FormValidator.js';
+
 // Переменные попапа Edit Profile
 const popupEditProfile = document.querySelector('.popup_type_edit');
 const openEditProfileButton = document.querySelector('.profile__edit-btn');
@@ -10,7 +14,6 @@ const inputEditProfileDescription = popupEditProfile.querySelector('.popup__inpu
 const popupAddPlace = document.querySelector('.popup_type_add');
 const formAddPlace = popupAddPlace.querySelector('.popup__form');
 const openAddPlaceButton = document.querySelector('.profile__add-btn');
-const addPlaceButton = popupAddPlace.querySelector('.popup__submit-btn');
 const inputAddPlaceName = popupAddPlace.querySelector('.popup__input_type_name');
 const inputAddPlaceLink = popupAddPlace.querySelector('.popup__input_type_link');
 
@@ -20,7 +23,6 @@ const imagePopupPicture = popupPicture.querySelector('.picture__image');
 const titlePicture = popupPicture.querySelector('.picture__title');
 
 // Остальные переменные...
-const placeTemplate = document.querySelector('#place').content;
 const placesContainer = document.querySelector('.places');
 const popups = document.querySelectorAll('.popup');
 const data = {
@@ -30,7 +32,8 @@ const data = {
     inactiveButtonClass: 'popup__submit-btn_inactive',
     inputErrorClass: 'popup__input_type_error',
     errorClass: 'popup__input-error_active'
-}
+};
+const formArray = Array.from(document.querySelectorAll(data.formSelector));
 
 // Функции открытия попапа
 function openPopup (element) {
@@ -39,18 +42,18 @@ function openPopup (element) {
 }
 
 function openPopupEditProfile () {
-    setPopupEditProfileValues();
+    inputEditProfileName.value = profileName.textContent;
+    inputEditProfileDescription.value = profileDescription.textContent;
     openPopup(popupEditProfile);
 }
 
 function openPopupAddPlace () {
     openPopup(popupAddPlace);
-    toggleButtonState([inputAddPlaceName, inputAddPlaceName], addPlaceButton, data)
 }
 
 function openPopupPicture (pictureData) {
-    imagePopupPicture.src = pictureData.image.src;
-    titlePicture.textContent = pictureData.name.textContent;
+    imagePopupPicture.src = pictureData.imageElement.src;
+    titlePicture.textContent = pictureData.nameElement.textContent;
     openPopup(popupPicture);
 }
 
@@ -75,33 +78,10 @@ function saveProfileChanges (e) {
     closePopup(popupEditProfile);
 }
 
-function addLikeHandler(item) {
-    item.addEventListener('click', e => e.target.classList.toggle('place__like_active'))
-}
-
-function addRemovePlaceHandler(item) {
-    item.addEventListener('click', e => e.target.parentElement.remove())
-}
-
-function addPlace(placeData) {
-    const placeElement = placeTemplate.querySelector('.place').cloneNode(true);
-    const placeNameElement = placeElement.querySelector('.place__name');
-    const placeImageElement = placeElement.querySelector('.place__image');
-    const placeLikeElement = placeElement.querySelector('.place__like');
-    const placeDeleteElement = placeElement.querySelector('.place__delete');
-    placeNameElement.textContent = placeData.name;
-    placeImageElement.src = placeData.link;
-    placeImageElement.alt = placeData.name;
-    addLikeHandler(placeLikeElement);
-    addRemovePlaceHandler(placeDeleteElement);
-    placeImageElement.addEventListener('click',() =>
-        openPopupPicture({name: placeNameElement, image: placeImageElement}));
-    return placeElement;
-}
-
 function renderCard(place) {
-    const placeElement = addPlace(place);
-    placesContainer.prepend(placeElement);
+    const card = new Card(place, openPopupPicture, '#place');
+    const cardElement = card.generateCard();
+    placesContainer.prepend(cardElement);
 }
 
 function popupAddPlaceSubmit(e) {
@@ -112,22 +92,11 @@ function popupAddPlaceSubmit(e) {
 }
 
 
-// Написала эту функцию, т.к. понадобилось задавать значения инпутов popup_type_edit еще при
-// загрузке страницы, поскольку кнопка popup__submit-btn получала неправильное состояние валидации
-function setPopupEditProfileValues () {
-    inputEditProfileName.value = profileName.textContent;
-    inputEditProfileDescription.value = profileDescription.textContent;
-}
-
-setPopupEditProfileValues();
-
-enableValidation(data);
-
-// События попапа Edit Profile
+// Слушатели попапа Edit Profile
 openEditProfileButton.addEventListener('click', openPopupEditProfile);
 popupEditProfile.addEventListener('submit', saveProfileChanges);
 
-// События попапа Add Place
+// Слушатели попапа Add Place
 openAddPlaceButton.addEventListener('click', openPopupAddPlace);
 popupAddPlace.addEventListener('submit', popupAddPlaceSubmit);
 
@@ -135,6 +104,12 @@ popupAddPlace.addEventListener('submit', popupAddPlaceSubmit);
 // Добавляем карточки из массива
 initialCards.forEach(function (place) {
     renderCard(place);
+});
+
+// Вешаем валидацию на все формы
+formArray.forEach(formElement => {
+    const form = new FormValidator(data, formElement);
+    form.enableValidation();
 });
 
 // Добавляем события закрытия попапов
