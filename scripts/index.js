@@ -1,9 +1,12 @@
+// Товарищ ревьюер, спасибо большое за комментарии "Можно лучше" и подсказки! Очень помогают улучшать мой код. =)
+
 import {initialCards} from './cards.js'
 import {Card} from './Card.js';
 import {FormValidator} from './FormValidator.js';
 
 // Переменные попапа Edit Profile
 const popupEditProfile = document.querySelector('.popup_type_edit');
+const formEditProfile = popupEditProfile.querySelector('.popup__form');
 const openEditProfileButton = document.querySelector('.profile__edit-btn');
 const profileName = document.querySelector('.profile__name');
 const profileDescription = document.querySelector('.profile__description');
@@ -34,6 +37,7 @@ const data = {
     errorClass: 'popup__input-error_active'
 };
 const formArray = Array.from(document.querySelectorAll(data.formSelector));
+const formValidators = {};
 
 // Функции открытия попапа
 function openPopup (element) {
@@ -44,15 +48,18 @@ function openPopup (element) {
 function openPopupEditProfile () {
     inputEditProfileName.value = profileName.textContent;
     inputEditProfileDescription.value = profileDescription.textContent;
+    formValidators[formEditProfile.getAttribute('name')].resetValidation();
     openPopup(popupEditProfile);
 }
 
 function openPopupAddPlace () {
+    formValidators[formAddPlace.getAttribute('name')].resetValidation();
     openPopup(popupAddPlace);
 }
 
 function openPopupPicture (pictureData) {
     imagePopupPicture.src = pictureData.imageElement.src;
+    imagePopupPicture.alt = pictureData.nameElement.textContent;
     titlePicture.textContent = pictureData.nameElement.textContent;
     openPopup(popupPicture);
 }
@@ -78,10 +85,13 @@ function saveProfileChanges (e) {
     closePopup(popupEditProfile);
 }
 
-function renderCard(place) {
+function createCard(place) {
     const card = new Card(place, openPopupPicture, '#place');
-    const cardElement = card.generateCard();
-    placesContainer.prepend(cardElement);
+    return card.generateCard();
+}
+
+function renderCard(place) {
+    placesContainer.prepend(createCard(place));
 }
 
 function popupAddPlaceSubmit(e) {
@@ -109,6 +119,8 @@ initialCards.forEach(function (place) {
 // Вешаем валидацию на все формы
 formArray.forEach(formElement => {
     const form = new FormValidator(data, formElement);
+    const formName = formElement.getAttribute('name');
+    formValidators[formName] = form;
     form.enableValidation();
 });
 
