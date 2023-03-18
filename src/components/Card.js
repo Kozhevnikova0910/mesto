@@ -25,7 +25,7 @@ export class Card {
     }
 
     _handleImageClick() {
-        this._openPopupPicture({imageElement: this._placeImageElement, nameElement: this._placeNameElement})
+        this._openPopupPicture({image: this._link, name: this._name})
     }
 
     _setEventListeners() {
