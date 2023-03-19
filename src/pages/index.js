@@ -2,14 +2,10 @@ import './index.css';
 import {
     formEditProfile,
     openEditProfileButton,
-    profileName,
-    profileDescription,
     inputEditProfileName,
     inputEditProfileDescription,
     formAddPlace,
     openAddPlaceButton,
-    inputAddPlaceName,
-    inputAddPlaceLink,
     data,
     formArray,
     formValidators,
@@ -20,47 +16,50 @@ import {FormValidator} from '../components/FormValidator.js';
 import {Section} from '../components/Section.js';
 import {PopupWithImage} from '../components/PopupWithImage.js';
 import {PopupWithForm} from '../components/PopupWithForm.js';
+import {UserInfo} from '../components/UserInfo.js';
 
+const userInfo = new UserInfo({
+    name: '.profile__name',
+    description: '.profile__description' })
 
-const popupEditProfileClass = new PopupWithForm({
-    handleSubmit: (e) => {
+const popupEditProfile = new PopupWithForm({
+    handleSubmit: (e, inputValues) => {
         e.preventDefault();
-        profileName.textContent = inputEditProfileName.value;
-        profileDescription.textContent = inputEditProfileDescription.value;
-        popupEditProfileClass.close();
+        userInfo.setUserInfo(inputValues);
+        popupEditProfile.close();
     }
 }, '.popup_type_edit')
 
-const popupAddPlaceClass = new PopupWithForm({
-    handleSubmit: (e) => {
+const popupAddPlace = new PopupWithForm({
+    handleSubmit: (e, inputValues) => {
         e.preventDefault();
-        renderCard({name: inputAddPlaceName.value, link: inputAddPlaceLink.value});
-        popupAddPlaceClass.close();
+        renderCard(inputValues);
+        popupAddPlace.close();
     }
 }, '.popup_type_add')
 
-const popupWithImage = new PopupWithImage(data, '.popup_type_picture');
+const popupPicture = new PopupWithImage(data, '.popup_type_picture');
 
-popupEditProfileClass.setEventListeners();
-popupAddPlaceClass.setEventListeners();
-popupWithImage.setEventListeners();
+popupEditProfile.setEventListeners();
+popupAddPlace.setEventListeners();
+popupPicture.setEventListeners();
 
 
 function openPopupEditProfile () {
-    inputEditProfileName.value = profileName.textContent;
-    inputEditProfileDescription.value = profileDescription.textContent;
+    const userInfoValues = userInfo.getUserInfo();
+    inputEditProfileName.value = userInfoValues.name;
+    inputEditProfileDescription.value = userInfoValues.description;
     formValidators[formEditProfile.getAttribute('name')].resetValidation();
-    popupEditProfileClass.open();
+    popupEditProfile.open();
 }
 
 function openPopupAddPlace () {
     formValidators[formAddPlace.getAttribute('name')].resetValidation();
-    popupAddPlaceClass.open();
+    popupAddPlace.open();
 }
 
 function openPopupPicture (data) {
-    const popupWithImage = new PopupWithImage(data, '.popup_type_picture');
-    popupWithImage.open();
+    popupPicture.open(data);
 }
 
 function createCard(place) {
@@ -82,9 +81,7 @@ openAddPlaceButton.addEventListener('click', openPopupAddPlace);
 const cardList = new Section({
     items: initialCards,
     renderer: (place) => {
-        const card = new Card(place, openPopupPicture, '#place');
-        const cardElement = card.generateCard();
-        cardList.addItem(cardElement);
+        renderCard(place)
     }}, '.places'
 );
 
