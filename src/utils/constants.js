@@ -22,32 +22,12 @@ const data = {
 const formArray = Array.from(document.querySelectorAll(data.formSelector));
 const formValidators = {};
 
-const initialCards = [
-    {
-        name: 'Архыз',
-        link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg'
-    },
-    {
-        name: 'Челябинская область',
-        link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg'
-    },
-    {
-        name: 'Иваново',
-        link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg'
-    },
-    {
-        name: 'Камчатка',
-        link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg'
-    },
-    {
-        name: 'Холмогорский район',
-        link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg'
-    },
-    {
-        name: 'Байкал',
-        link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
-    }
-];
+
+// Переменные для Api
+const profileNameElement = document.querySelector('.profile__name');
+const profileDescriptionElement = document.querySelector('.profile__description');
+const profileAvatarContainerElement = document.querySelector('.profile__avatar-container');
+const profileAvatarElement = profileAvatarContainerElement.querySelector('.profile__avatar')
 
 export {
     formEditProfile,
@@ -59,5 +39,8 @@ export {
     data,
     formArray,
     formValidators,
-    initialCards
+    profileNameElement,
+    profileDescriptionElement,
+    profileAvatarElement,
+    profileAvatarContainerElement,
 }
