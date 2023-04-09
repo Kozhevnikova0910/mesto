@@ -5,11 +5,11 @@ export class PopupDeleteCard extends Popup {
         super(selector);
         this._onSubmit = onSubmit;
         this._popupForm = this._popup.querySelector(".popup__form");
+        this.submitButton = this._popup.querySelector('.popup__submit-btn');
     }
 
     _onSubmitHandler = (e) => {
         this._onSubmit(e, { cardId: this._cardId, card: this._card });
-        this._popup.classList.remove('popup_opened');
         this._popupForm.removeEventListener("submit", this._onSubmitHandler);
     };
 

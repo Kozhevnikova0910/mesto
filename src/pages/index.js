@@ -25,7 +25,8 @@ import {Api} from '../components/Api';
 
 const userInfo = new UserInfo({
     name: '.profile__name',
-    description: '.profile__description' })
+    description: '.profile__description',
+    avatar: '.profile__avatar'})
 
 let label;
 function uxLabelSaving(button) {
@@ -41,18 +42,12 @@ const popupEditProfile = new PopupWithForm({
         e.preventDefault();
         uxLabelSaving(popupEditProfile.submitButton);
         api.patchUserInfo(inputValues)
-            .then((res) => {
-                if (res.ok) {
-                    return res.json();
-                }
-                return Promise.reject(res.status);
-            })
             .then((data) => {
                 userInfo.setUserInfo({name: data.name, description: data.about});
-                uxLabelDefault(popupEditProfile.submitButton);
+                popupEditProfile.close();
             })
             .catch((error) => console.log(error))
-        popupEditProfile.close();
+            .finally(() => uxLabelDefault(popupEditProfile.submitButton))
     }
 }, '.popup_type_edit')
 
@@ -61,18 +56,12 @@ const popupAddPlace = new PopupWithForm({
         e.preventDefault();
         uxLabelSaving(popupAddPlace.submitButton);
         api.postNewCard(inputValues)
-            .then((res) => {
-                if (res.ok) {
-                    return res.json()
-                }
-                return Promise.reject(res.status)
-            })
             .then((data) => {
                 renderCard(data);
-                uxLabelDefault(popupAddPlace.submitButton);
+                popupAddPlace.close();
             })
             .catch(error => console.log(error))
-        popupAddPlace.close();
+            .finally(() => uxLabelDefault(popupAddPlace.submitButton))
     }
 }, '.popup_type_add')
 
@@ -85,18 +74,13 @@ const popupAvatar = new PopupWithForm({
         e.preventDefault();
         uxLabelSaving(popupAvatar.submitButton);
         api.patchAvatar(inputValues.link)
-            .then((res) => {
-                if (res.ok) {
-                    return res.json()
-                }
-                return Promise.reject(res.status)
-            })
             .then((data) => {
-                profileAvatarElement.src = data.avatar;
-                uxLabelDefault(popupAvatar.submitButton);
+                userInfo.setUserInfo({avatar: data.avatar});
+                // profileAvatarElement.src = data.avatar;
+                popupAvatar.close()
             })
             .catch(error => console.log(error))
-        popupAvatar.close();
+            .finally(() => uxLabelDefault(popupAvatar.submitButton))
     }
 }, '.popup_type_avatar')
 
@@ -144,42 +128,34 @@ function renderCard(place) {
 
 function deleteCard(e, {cardId, card}) {
     e.preventDefault();
+    uxLabelSaving(popupDeleteCard.submitButton)
     api.deleteCard(cardId)
         .then(() => {
             card.remove();
             popupDeleteCard.close();
+            uxLabelDefault(popupDeleteCard.submitButton)
         })
         .catch((err) => {
             console.log(err);
         });
 }
 
-function putLike(cardId, countElement) {
+function putLike(cardId, countElement, likeElement) {
     api.putLike(cardId)
-        .then((res) => {
-            if (res.ok) {
-                return res.json();
-            }
-            return Promise.reject(res.status);
-        })
         .then(data => {
             countElement.textContent = data.likes.length;
+            likeElement.classList.add('place__like_active');
         })
         .catch((err) => {
             console.log(err);
         });
 }
 
-function deleteLike(cardId, countElement) {
+function deleteLike(cardId, countElement, likeElement) {
     api.deleteLike(cardId)
-        .then((res) => {
-            if (res.ok) {
-                return res.json();
-            }
-            return Promise.reject(res.status);
-        })
         .then(data => {
             countElement.textContent = data.likes.length;
+            likeElement.classList.remove('place__like_active');
         })
         .catch((err) => {
             console.log(err);
@@ -212,28 +188,19 @@ const api = new Api({
 
 // Информация пользователя
 api.getUserInfo()
-    .then((res) => {
-        if (res.ok) {
-            return res.json();
-        }
-        return Promise.reject(res.status);
-    })
     .then((data) => {
-        profileNameElement.textContent = data.name;
-        profileDescriptionElement.textContent = data.about;
-        profileAvatarElement.src = data.avatar;
+        userInfo.setUserInfo({
+            name: data.name,
+            description: data.about,
+            avatar: data.avatar,
+        })
     })
     .catch((err) => console.log(err));
 
 // Карточки
+
 let userId;
     api.getUserInfo()
-        .then(res => {
-            if (res.ok) {
-                return res.json()
-            }
-            return Promise.reject(res.status);
-        })
         .then(data => {
             userId = data._id;
             getInitialCards()
@@ -246,12 +213,6 @@ let cardList = [];
 
 function getInitialCards() {
     api.getInitialCards()
-        .then((res) => {
-            if (res.ok) {
-                return res.json()
-            }
-            return Promise.reject(res.status);
-        })
         .then((data) => {
             cardList = new Section({
                 items: data, renderer: (place) => {

@@ -5,10 +5,17 @@ export class Api {
         this.headers = options.headers;
     }
 
+    _checkResponse(res) {
+        return res.ok
+            ? res.json()
+            : Promise.reject(`Ошибка ${res.status}`);
+    }
+
     getInitialCards() {
         return fetch(`${this.baseUrl}/cards`, {
             headers: this.headers
         })
+            .then(this._checkResponse)
     }
 
     // другие методы работы с API
@@ -16,6 +23,7 @@ export class Api {
         return fetch(`${this.baseUrl}/users/me`, {
             headers: this.headers
         })
+            .then(this._checkResponse)
     }
 
     patchUserInfo(inputValues) {
@@ -24,6 +32,7 @@ export class Api {
             headers: this.headers,
             body: JSON.stringify({name: inputValues.name, about: inputValues.description})
         })
+            .then(this._checkResponse)
     }
 
     postNewCard(cardInfo) {
@@ -32,6 +41,7 @@ export class Api {
             headers: this.headers,
             body: JSON.stringify(cardInfo)
         })
+            .then(this._checkResponse)
     }
 
     deleteCard(id) {
@@ -39,6 +49,7 @@ export class Api {
             method: "DELETE",
             headers: this.headers,
         })
+            .then(this._checkResponse)
     }
 
     putLike(id) {
@@ -46,6 +57,7 @@ export class Api {
             method: "PUT",
             headers: this.headers,
         })
+            .then(this._checkResponse)
     }
 
     deleteLike(id) {
@@ -53,6 +65,7 @@ export class Api {
             method: "DELETE",
             headers: this.headers,
         })
+            .then(this._checkResponse)
     }
 
     patchAvatar(link) {
@@ -61,6 +74,7 @@ export class Api {
             headers: this.headers,
             body: JSON.stringify({avatar: link})
         })
+            .then(this._checkResponse)
     }
 
 }

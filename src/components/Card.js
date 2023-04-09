@@ -39,15 +39,13 @@ export class Card {
     }
 
     _handleLikedClick() {
-        this._placeLikeElement.classList.remove('place__like_active');
         this._isLiked = !this._isLiked;
-        this._deleteLike(this._id, this._placeLikeCountElement);
+        this._deleteLike(this._id, this._placeLikeCountElement, this._placeLikeElement);
     }
 
     _handleNotLikedClick() {
-        this._placeLikeElement.classList.add('place__like_active');
         this._isLiked = !this._isLiked;
-        this._putLike(this._id, this._placeLikeCountElement);
+        this._putLike(this._id, this._placeLikeCountElement, this._placeLikeElement);
     }
 
     _handleDeleteClick() {
