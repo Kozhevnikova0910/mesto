@@ -24,10 +24,7 @@ const formValidators = {};
 
 
 // Переменные для Api
-const profileNameElement = document.querySelector('.profile__name');
-const profileDescriptionElement = document.querySelector('.profile__description');
 const profileAvatarContainerElement = document.querySelector('.profile__avatar-container');
-const profileAvatarElement = profileAvatarContainerElement.querySelector('.profile__avatar')
 
 export {
     formEditProfile,
@@ -39,8 +36,5 @@ export {
     data,
     formArray,
     formValidators,
-    profileNameElement,
-    profileDescriptionElement,
-    profileAvatarElement,
     profileAvatarContainerElement,
 }

@@ -9,9 +9,6 @@ import {
     data,
     formArray,
     formValidators,
-    profileNameElement,
-    profileDescriptionElement,
-    profileAvatarElement,
     profileAvatarContainerElement,
 } from '../utils/constants.js'
 import {Card} from '../components/Card.js';
@@ -76,7 +73,6 @@ const popupAvatar = new PopupWithForm({
         api.patchAvatar(inputValues.link)
             .then((data) => {
                 userInfo.setUserInfo({avatar: data.avatar});
-                // profileAvatarElement.src = data.avatar;
                 popupAvatar.close()
             })
             .catch(error => console.log(error))
@@ -133,11 +129,11 @@ function deleteCard(e, {cardId, card}) {
         .then(() => {
             card.remove();
             popupDeleteCard.close();
-            uxLabelDefault(popupDeleteCard.submitButton)
         })
         .catch((err) => {
             console.log(err);
-        });
+        })
+        .finally(() => uxLabelDefault(popupDeleteCard.submitButton));
 }
 
 function putLike(cardId, countElement, likeElement) {
