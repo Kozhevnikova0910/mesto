@@ -182,41 +182,25 @@ const api = new Api({
     }
 });
 
-// Информация пользователя
-api.getUserInfo()
-    .then((data) => {
-        userInfo.setUserInfo({
-            name: data.name,
-            description: data.about,
-            avatar: data.avatar,
-        })
-    })
-    .catch((err) => console.log(err));
-
-// Карточки
-
+// Информация пользователя и карточки
 let userId;
-    api.getUserInfo()
-        .then(data => {
-            userId = data._id;
-            getInitialCards()
-        })
-        .catch((err) => {
-            console.log(err);
-        })
-
 let cardList = [];
 
-function getInitialCards() {
-    api.getInitialCards()
-        .then((data) => {
-            cardList = new Section({
-                items: data, renderer: (place) => {
-                    renderCard(place)
-                }
-            }, '.places');
+Promise.all([api.getUserInfo(), api.getInitialCards()])
+    .then(([userData, cardsData]) => {
+        userInfo.setUserInfo({
+            name: userData.name,
+            description: userData.about,
+            avatar: userData.avatar,
+        });
+        userId = userData._id;
 
-            cardList.renderItems();
-        })
-        .catch(err => console.log(err));
-}
+        cardList = new Section({
+            items: cardsData, renderer: (place) => {
+                renderCard(place)
+            }
+        }, '.places');
+
+        cardList.renderItems();
+    })
+    .catch(err => console.log(err));
